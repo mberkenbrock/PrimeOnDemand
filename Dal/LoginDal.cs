@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using WindowsFormsApp1.Modelo;
 
 namespace WindowsFormsApp1.Dal
@@ -38,12 +39,28 @@ namespace WindowsFormsApp1.Dal
 
             return tem;
         }
-        public String cadastrar(String email, String senha, String confSenha)
+        public String cadastrar(String cod_usuario, String email, String senha)
         {
+            cmd.CommandText = "insert into logins values (@cod_usuario, @email, @senha)";
+            cmd.Parameters.AddWithValue("@cod_usuario", cod_usuario);
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@senha", senha);
+
+            try
+            {
+                cmd.Connection = con.conectar();
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    tem = true;
+                }
+            }
+            catch (SqlException)
+            {
+                this.mensagem = "Erro ao conectar o Banco de Dados";
+            }
             return mensagem;
         }
-
-
 
     }
 }
